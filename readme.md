@@ -1,9 +1,12 @@
-## Needed:
+## To do (in no order):
  - Templating (views)
  - Database storage and retrieval (models)
  - Routing (to controllers)
  - Controllers (query models and push to views)
-
- ## Notes:
- Same DB?
- Migrations?
+ - Roles
+ - Save data points
+ - Display data points
+ - Filter data points
+ - Security (ongoing)
+ - Validation (ongoing)
+ - Database migrations
