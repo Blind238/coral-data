@@ -1,0 +1,25 @@
+{
+  "name": "coral-data",
+  "version": "1.0.0",
+  "description": "- Templating (views)  - Database storage and retrieval (models)  - Routing (to controllers)  - Controllers (query models and push to views)  - Roles  - Save data points  - Display data points  - Filter data points  - Security (ongoing)  - Validation (ongoing)  - Database migrations",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Blind238/coral-data.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Blind238/coral-data/issues"
+  },
+  "homepage": "https://github.com/Blind238/coral-data#readme",
+  "dependencies": {
+    "koa": "^2.5.3",
+    "pg": "^7.4.3",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.38.1"
+  }
+}
