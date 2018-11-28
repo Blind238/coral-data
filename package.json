@@ -18,8 +18,8 @@
   "homepage": "https://github.com/Blind238/coral-data#readme",
   "dependencies": {
     "koa": "^2.5.3",
-    "pg": "^7.4.3",
-    "pg-hstore": "^2.3.2",
-    "sequelize": "^4.38.1"
+    "koa-router": "^7.4.0",
+    "sequelize": "^4.38.1",
+    "sqlite3": "^4.0.4"
   }
 }
