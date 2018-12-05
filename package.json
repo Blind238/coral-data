@@ -17,9 +17,11 @@
   },
   "homepage": "https://github.com/Blind238/coral-data#readme",
   "dependencies": {
+    "fs-extra": "^7.0.1",
     "koa": "^2.5.3",
     "koa-router": "^7.4.0",
     "sequelize": "^4.38.1",
-    "sqlite3": "^4.0.4"
+    "sqlite3": "^4.0.4",
+    "watson-developer-cloud": "^3.13.1"
   }
 }
