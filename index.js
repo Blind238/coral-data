@@ -4,9 +4,6 @@ const Router = require('koa-router');
 const Sequelize = require('sequelize');
 const zipPending = require('./lib/zipPending');
 
-// testing image bundling for watson
-zipPending();
-
 const app = new Koa();
 const router = new Router();
 const sequelize = new Sequelize('coralData', null, null, {
