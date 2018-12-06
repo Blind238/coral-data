@@ -1,3 +1,4 @@
+"use strict";
 // Observation, sample, data point. Rename with more appropriate title?
 module.exports = (sequelize, DataTypes) => {
   var observation = sequelize.define('observation', {
