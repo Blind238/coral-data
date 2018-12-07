@@ -3,6 +3,10 @@ const Koa = require('koa');
 const Router = require('koa-router');
 const Sequelize = require('sequelize');
 const zipPending = require('./lib/zipPending');
+const updateVisualRecognition = require('./lib/watson');
+
+// zipPending();
+updateVisualRecognition();
 
 const app = new Koa();
 const router = new Router();
