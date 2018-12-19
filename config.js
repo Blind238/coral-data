@@ -1,4 +1,4 @@
-"use strict";
+'use strict'
 const config = {
   idClasses: [
     'coral',
@@ -7,7 +7,7 @@ const config = {
   ],
   srcDir: 'images/pending/',
   destDir: 'images/zipped/',
-  zipDir: 'images/zips/',
+  zipDir: 'images/zips/'
 }
 
-module.exports = config;
+module.exports = config

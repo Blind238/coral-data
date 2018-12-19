@@ -1,4 +1,4 @@
-"use strict";
+'use strict'
 // Observation, sample, data point. Rename with more appropriate title?
 module.exports = (sequelize, DataTypes) => {
   var observation = sequelize.define('observation', {
@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     // not sure if filename/descriptor or image file makes more sense DB will be huge with files
     // ,image: DataTypes.STRING ??
     // ,image: DataTypes.BLOB /* returns buffer */
-  });
+  })
 
-  return observation;
-};
+  return observation
+}
