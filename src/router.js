@@ -24,7 +24,7 @@ export default new Router({
     {
       path: '/coral-map',
       name: 'coral-map',
-      component: () => import('./views/CoralMap.vue')
+      component: () => import(/* webpackChunkName: "coralMap" */ './views/CoralMap.vue')
     }
   ]
 })
