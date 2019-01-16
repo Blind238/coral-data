@@ -3,15 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "serve": "vue-cli-service serve --open",
+    "build": "vue-cli-service build --modern",
     "lint": "vue-cli-service lint",
     "backend": "nodemon ./index.js --watch ./index.js",
     "full": "concurrently --raw npm:serve npm:backend"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Blind238/coral-data.git"
   },
   "dependencies": {
     "archiver": "^3.0.0",
@@ -38,9 +34,27 @@
     "concurrently": "^4.1.0",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0",
+    "lint-staged": "^8.1.0",
     "node-sass": "^4.9.0",
     "nodemon": "^1.18.9",
     "sass-loader": "^7.0.1",
     "vue-template-compiler": "^2.5.21"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.js": [
+      "vue-cli-service lint",
+      "git add"
+    ],
+    "*.vue": [
+      "vue-cli-service lint",
+      "git add"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Blind238/coral-data.git"
   }
 }
