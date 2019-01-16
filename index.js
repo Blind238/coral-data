@@ -15,7 +15,8 @@ const app = new Koa()
 const router = new Router()
 const sequelize = new Sequelize('coralData', null, null, {
   dialect: 'sqlite',
-  storage: 'db.sqlite'
+  storage: 'db.sqlite',
+  logging: false
 })
 
 app.context.db = sequelize
@@ -69,4 +70,4 @@ if (process.env.NODE_ENV === 'production') {
   app.use(serve('dist'))
 }
 
-app.listen(2380, _ => console.log('listening on http://localhost:2380'))
+app.listen(2380, _ => console.log('backend server listening on http://localhost:2380'))
