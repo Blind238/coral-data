@@ -12,6 +12,20 @@
 <style lang="scss">
 @import '~normalize.css';
 
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  font-family: sans-serif;
+}
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -30,17 +44,4 @@
   }
 }
 
-html {
-  box-sizing: border-box;
-}
-
-*, *:before, *:after {
-  box-sizing: inherit;
-}
-
-body {
-  padding: 0;
-  margin: 0;
-  font-family: sans-serif;
-}
 </style>

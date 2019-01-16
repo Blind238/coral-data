@@ -1,8 +1,6 @@
 <template>
 <div class="coral-map-container">
-  <div ref="coralMap" class="coral-map">
-
-  </div>
+  <TheMap ref="theMap" class="coral-map" />
   <div class="coral-map-legend">
     Legend:
     <ul>
@@ -13,19 +11,23 @@
     </ul>
   </div>
   <div class="coral-map-control">
-    <button id="fit">Fit</button>
+    <button id="fit" @click="fit">Fit</button>
   </div>
 </div>
 </template>
 
 <script>
-import coralMap from '../script/coral-map.js'
+import TheMap from '@/components/TheMap.vue'
 
 export default {
   name: 'coral-map',
-  mounted: function () {
-    coralMap(this.$refs.coralMap)
-    console.log('coral-map.js loaded')
+  components: {
+    TheMap
+  },
+  methods: {
+    fit () {
+      this.$refs.theMap.fit()
+    }
   }
 }
 </script>
@@ -36,8 +38,8 @@ export default {
 }
 
 .coral-map {
-  width: 100vw;
-  height: calc(100vh - 78px);
+  width: calc(100vw);
+  height: calc(100vh - 100px);
 
   &-legend, &-control {
     position: absolute;
@@ -72,6 +74,4 @@ export default {
     margin-right: 4em;
   }
 }
-
-@import '~leaflet/dist/leaflet.css';
 </style>
