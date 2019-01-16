@@ -1,21 +1,18 @@
 {
   "name": "coral-data",
-  "version": "1.0.0",
-  "description": "- Templating (views)  - Database storage and retrieval (models)  - Routing (to controllers)  - Controllers (query models and push to views)  - Roles  - Save data points  - Display data points  - Filter data points  - Security (ongoing)  - Validation (ongoing)  - Database migrations",
-  "main": "index.js",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "backend": "nodemon ./index.js --watch ./index.js",
+    "full": "concurrently --raw npm:serve npm:backend"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Blind238/coral-data.git"
   },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Blind238/coral-data/issues"
-  },
-  "homepage": "https://github.com/Blind238/coral-data#readme",
   "dependencies": {
     "archiver": "^3.0.0",
     "fs-extra": "^7.0.1",
@@ -27,9 +24,23 @@
     "normalize.css": "^8.0.1",
     "sequelize": "^4.38.1",
     "sqlite3": "^4.0.4",
+    "vue": "^2.5.21",
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1",
     "watson-developer-cloud": "^3.13.1"
   },
   "devDependencies": {
-    "standard": "^12.0.1"
+    "@vue/cli-plugin-babel": "^3.3.0",
+    "@vue/cli-plugin-eslint": "^3.3.0",
+    "@vue/cli-service": "^3.3.0",
+    "@vue/eslint-config-standard": "^4.0.0",
+    "babel-eslint": "^10.0.1",
+    "concurrently": "^4.1.0",
+    "eslint": "^5.8.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "node-sass": "^4.9.0",
+    "nodemon": "^1.18.9",
+    "sass-loader": "^7.0.1",
+    "vue-template-compiler": "^2.5.21"
   }
 }

@@ -6,8 +6,8 @@ const parse = require('koa-body')
 
 const Sequelize = require('sequelize')
 
-const zipPending = require('./lib/zipPending')
-const updateVisualRecognition = require('./lib/watson')
+// const zipPending = require('./lib/zipPending')
+// const updateVisualRecognition = require('./lib/watson')
 
 const path = require('path')
 
@@ -64,6 +64,9 @@ router.get('/db', async (ctx, next) => {
 app.use(router.routes())
   .use(router.allowedMethods())
 
-app.use(serve('dist'))
+// in development we are already serving via vue-cli (webpack)
+if (process.env.NODE_ENV === 'production') {
+  app.use(serve('dist'))
+}
 
 app.listen(2380, _ => console.log('listening on http://localhost:2380'))
