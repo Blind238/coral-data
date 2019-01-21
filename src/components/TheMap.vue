@@ -68,8 +68,7 @@ export default {
         .then(data => {
           data.forEach(entry => {
             L.circle([entry.lat, entry.lon], {
-              color: 'green',
-              fillOpacity: 1,
+              className: 'coral',
               radius: 10
             }).addTo(theMap).on('click', (e) => {
               L.DomEvent.stopPropagation(e)

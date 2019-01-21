@@ -1,19 +1,23 @@
 <template>
-<div class="coral-map-container">
-  <TheMap ref="theMap" class="coral-map" />
-  <div class="coral-map-legend">
-    Legend:
-    <ul>
-      <li><span class="coral"></span>Coral</li>
-      <li><span class="seagrass"></span>Seagrass</li>
-      <li><span class="sand"></span>Sand</li>
-      <li><span class="other"></span>Other/Debris</li>
-    </ul>
-  </div>
-  <div class="coral-map-control">
-    <button id="fit" @click="fit">Fit</button>
-  </div>
-</div>
+  <v-container fluid fill-height class="coral-map-container">
+    <v-layout row>
+      <v-flex grow>
+        <TheMap ref="theMap" class="coral-map" />
+        <div class="coral-map-legend">
+          Legend:
+          <ul>
+            <li><span class="coral"></span>Coral</li>
+            <li><span class="seagrass"></span>Seagrass</li>
+            <li><span class="sand"></span>Sand</li>
+            <li><span class="other"></span>Other/Debris</li>
+          </ul>
+        </div>
+        <v-card class="coral-map-control">
+          <v-btn id="fit" @click="fit">Fit</v-btn>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
@@ -32,46 +36,70 @@ export default {
 }
 </script>
 
+<style lang="scss">
+  @import '../legend-colors';
+
+// allow the toolbar's shadow to show on top of the map
+.v-toolbar {
+  z-index: 1001;
+}
+
+@mixin path-style($color) {
+  stroke: $color !important;
+  fill: $color !important;
+}
+
+path {
+  &.coral { @include path-style($coral); }
+  &.seagrass { @include path-style($seagrass); }
+  &.sand { @include path-style($sand); }
+  &.other { @include path-style($other); }
+}
+</style>
+
 <style lang="scss" scoped>
+@import '../legend-colors';
+
 .coral-map-container {
   position: relative;
+  // override v-container's padding
+  padding: 0;
 }
 
 .coral-map {
-  width: calc(100vw);
-  height: calc(100vh - 100px);
+  height: 100%;
 
   &-legend, &-control {
     position: absolute;
+    // make sure our elements render on top of the map
     z-index: 1001;
   }
 
   &-legend {
     top: 0;
     left: 0;
-    margin: 1.5em 2em;
+    margin: 1.5rem 2rem;
     text-align: left;
 
     ul { list-style: none; }
     li { margin: 0.5em; }
     span {
-      width: 1em;
-      height: 1em;
+      width: 1rem;
+      height: 1rem;
       float: left;
-      margin-right: 0.5em;
+      margin-right: 0.5rem;
     }
 
-    .coral { background-color: #f7403a; }
-    .seagrass { background-color: #00ad00; }
-    .sand { background-color: #fcda90; }
-    .other { background-color: #afafaf; }
+    .coral { background-color: $coral; }
+    .seagrass { background-color: $seagrass; }
+    .sand { background-color: $sand; }
+    .other { background-color: $other; }
   }
 
   &-control {
     top: 0;
     right: 0;
-    margin: 1.5em;
-    margin-right: 4em;
+    margin: 1rem 4.5rem;
   }
 }
 </style>
