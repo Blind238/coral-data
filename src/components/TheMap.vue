@@ -4,7 +4,7 @@
 
 <script>
 import * as L from 'leaflet'
-// import coralMap from '../script/coral-map.js'
+import axios from 'axios'
 
 let mapBounds = [
   [12.679030488621091, -70.13147196369502],
@@ -35,19 +35,14 @@ export default {
     L.control.scale({ imperial: false }).addTo(theMap)
 
     theMap.on('click', async (e) => {
-      let response = await fetch('/api/observation', {
-        method: 'POST',
-        body: JSON.stringify({
+      let response = await axios.post('/api/observation',
+        {
           lat: e.latlng.lat,
           lon: e.latlng.lng
-        }),
-        headers: {
-          'Content-Type': 'application/json'
         }
-      })
-      let data = await response.json()
+      )
 
-      L.circle([data.lat, data.lon], {
+      L.circle([response.data.lat, response.data.lon], {
         color: 'green',
         fillOpacity: 1,
         radius: 10
@@ -63,10 +58,9 @@ export default {
       theMap.fitBounds(mapBounds)
     },
     populate () {
-      fetch('/api/observation')
-        .then(response => response.json())
-        .then(data => {
-          data.forEach(entry => {
+      axios.get('/api/observation')
+        .then(response => {
+          response.data && response.data.forEach(entry => {
             L.circle([entry.lat, entry.lon], {
               className: 'coral',
               radius: 10
