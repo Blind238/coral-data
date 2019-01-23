@@ -23,7 +23,9 @@ export default {
       zoomSnap: 0,
       center: mapCenter,
       zoom: 11,
-      zoomControl: false
+      zoomControl: false,
+      minZoom: 10,
+      maxZoom: 17
     }).fitBounds(mapBounds)
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -43,8 +45,7 @@ export default {
       )
 
       L.circle([response.data.lat, response.data.lon], {
-        color: 'green',
-        fillOpacity: 1,
+        className: 'coral',
         radius: 10
       }).addTo(theMap).on('click', (e) => {
         L.DomEvent.stopPropagation(e)

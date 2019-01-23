@@ -47,6 +47,7 @@ export default {
 @mixin path-style($color) {
   stroke: $color !important;
   fill: $color !important;
+  fill-opacity: 1 !important;
 }
 
 path {
