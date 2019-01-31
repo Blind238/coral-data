@@ -49,6 +49,7 @@ export default {
         radius: 10
       }).addTo(theMap).on('click', (e) => {
         L.DomEvent.stopPropagation(e)
+        this.expand({ data: response.data, event: e })
       })
     })
 
@@ -62,14 +63,19 @@ export default {
       axios.get('/api/observation')
         .then(response => {
           response.data && response.data.forEach(entry => {
-            L.circle([entry.lat, entry.lon], {
+            let data = entry
+            L.circle([data.lat, data.lon], {
               className: 'coral',
               radius: 10
             }).addTo(theMap).on('click', (e) => {
               L.DomEvent.stopPropagation(e)
+              this.expand({ data, event: e })
             })
           })
         })
+    },
+    expand (point) {
+      this.$emit('expand-point', point)
     }
 
   }

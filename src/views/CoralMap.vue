@@ -2,19 +2,22 @@
   <v-container fluid fill-height class="coral-map-container">
     <v-layout row>
       <v-flex grow>
-        <TheMap ref="theMap" class="coral-map" />
-        <div class="coral-map-legend">
-          Legend:
-          <ul>
-            <li><span class="coral"></span>Coral</li>
-            <li><span class="seagrass"></span>Seagrass</li>
-            <li><span class="sand"></span>Sand</li>
-            <li><span class="other"></span>Other/Debris</li>
-          </ul>
+        <TheMap ref="theMap" class="coral-map" @expand-point="expand" />
+        <div class="coral-map-overlay">
+          <div class="coral-map-legend">
+            Legend:
+            <ul>
+              <li><span class="coral"></span>Coral</li>
+              <li><span class="seagrass"></span>Seagrass</li>
+              <li><span class="sand"></span>Sand</li>
+              <li><span class="other"></span>Other/Debris</li>
+            </ul>
+          </div>
+          <v-card class="coral-map-control">
+            <v-btn id="fit" @click="fit">Fit</v-btn>
+          </v-card>
+          <point-detail v-if="pointData" v-bind="pointData" class="coral-map-detail" @close="pointData = null" />
         </div>
-        <v-card class="coral-map-control">
-          <v-btn id="fit" @click="fit">Fit</v-btn>
-        </v-card>
       </v-flex>
     </v-layout>
   </v-container>
@@ -22,15 +25,25 @@
 
 <script>
 import TheMap from '@/components/TheMap.vue'
+import pointDetail from '@/components/pointDetail.vue'
 
 export default {
   name: 'coral-map',
+  data () {
+    return {
+      pointData: null
+    }
+  },
   components: {
-    TheMap
+    TheMap,
+    pointDetail
   },
   methods: {
     fit () {
       this.$refs.theMap.fit()
+    },
+    expand ({ data, event }) {
+      this.pointData = data
     }
   }
 }
@@ -70,13 +83,19 @@ path {
 .coral-map {
   height: 100%;
 
-  &-legend, &-control {
+  &-overlay {
     position: absolute;
+    top: 0;
+    width: 100%;
+  }
+  &-legend, &-control, &-detail {
+    // position: absolute;
     // make sure our elements render on top of the map
     z-index: 1001;
   }
 
   &-legend {
+    position: absolute;
     top: 0;
     left: 0;
     margin: 1.5rem 2rem;
@@ -97,10 +116,18 @@ path {
     .other { background-color: $other; }
   }
 
+  &-control, &-detail {
+    float: right;
+  }
+
   &-control {
-    top: 0;
-    right: 0;
-    margin: 1rem 4.5rem;
+    margin: 1rem;
+    margin-right: 4.5rem;
+  }
+
+  &-detail {
+    margin: 1rem;
+    margin-right: 0;
   }
 }
 </style>
