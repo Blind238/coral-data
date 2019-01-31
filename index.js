@@ -7,7 +7,13 @@ const parse = require('koa-body')
 const Sequelize = require('sequelize')
 
 // const zipPending = require('./lib/zipPending')
-// const updateVisualRecognition = require('./lib/watson')
+// const watsonVR = require('./lib/watson')
+
+// zipPending()
+//   .then(_ => {
+//     watsonVR.updateClassifiers()
+//   })
+// watsonVR.listClassifiers().then(res => console.log(JSON.stringify(res, null, 2)))
 
 const path = require('path')
 
