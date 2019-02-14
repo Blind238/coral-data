@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --modern",
     "lint": "vue-cli-service lint",
-    "backend": "nodemon ./index.js --watch index.js --watch lib",
+    "backend": "nodemon index.js --watch index.js --watch lib --watch models --watch routes",
     "full": "concurrently --raw npm:serve npm:backend"
   },
   "dependencies": {

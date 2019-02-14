@@ -5,9 +5,11 @@ module.exports = (sequelize, DataTypes) => {
     lat: { type: DataTypes.DOUBLE, allowNull: false },
     lon: { type: DataTypes.DOUBLE, allowNull: false },
     depth: DataTypes.DOUBLE,
-    temp: DataTypes.DOUBLE
-    // not sure if filename/descriptor or image file makes more sense DB will be huge with files
-    // ,image: DataTypes.STRING ??
+    temp: DataTypes.DOUBLE,
+    imageUrl: DataTypes.STRING,
+    resultCoral: { type: DataTypes.DOUBLE, defaultValue: 0 },
+    resultSeagrass: { type: DataTypes.DOUBLE, defaultValue: 0 },
+    resultSand: { type: DataTypes.DOUBLE, defaultValue: 0 }
     // ,image: DataTypes.BLOB /* returns buffer */
   })
 

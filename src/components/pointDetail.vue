@@ -1,7 +1,7 @@
 <template>
   <v-card>
-    <v-layout row>
-      <v-flex>
+    <v-layout row wrap style="width: 600px">
+      <v-flex xs7>
         <v-list>
           <v-list-tile>
             <v-list-tile-content>lattitude: {{ lat }}</v-list-tile-content>
@@ -15,9 +15,16 @@
           <v-list-tile>
             <v-list-tile-content>temperature: {{ temp }}&deg; Celcius </v-list-tile-content>
           </v-list-tile>
+          <v-list-tile>
+            <v-list-tile-content>
+              coral: {{ resultCoral }},
+              seagrass: {{ resultSeagrass }},
+              sand: {{ resultSand }}
+            </v-list-tile-content>
+          </v-list-tile>
         </v-list>
       </v-flex>
-      <v-flex>
+      <v-flex xs5>
         <v-container grid-list-sm>
           <v-layout column align-end>
             <v-flex>
@@ -32,11 +39,19 @@
           </v-layout>
         </v-container>
       </v-flex>
+      <v-flex xs12>
+        <v-btn color="success" @click="show">Show</v-btn>
+        <v-btn flat @click="submit('coral')">Set Coral</v-btn>
+        <v-btn flat @click="submit('seagrass')">Set Seagrass</v-btn>
+        <v-btn flat @click="submit('sand')">Set Sand</v-btn>
+      </v-flex>
     </v-layout>
   </v-card>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   props: {
     lat: {
@@ -58,6 +73,59 @@ export default {
     imgUrl: {
       type: String,
       default: ''
+    },
+    bounds: {
+      type: Object,
+      default: () => ({})
+    },
+    center: {
+      type: Object,
+      default: () => ({})
+    },
+    resultCoral: {
+      type: Number,
+      default: 0
+    },
+    resultSeagrass: {
+      type: Number,
+      default: 0
+    },
+    resultSand: {
+      type: Number,
+      default: 0
+    }
+  },
+  methods: {
+    show () {
+      this.$emit('show', this)
+    },
+    async submit (type) {
+      let response
+      switch (type) {
+        case 'coral':
+          response = await axios.post('/api/observation', {
+            lat: this.center.lat,
+            lon: this.center.lon,
+            resultCoral: 0.9
+          })
+          break
+        case 'seagrass':
+          response = await axios.post('/api/observation', {
+            lat: this.center.lat,
+            lon: this.center.lon,
+            resultSeagrass: 0.9
+          })
+          break
+        case 'sand':
+          response = await axios.post('/api/observation', {
+            lat: this.center.lat,
+            lon: this.center.lon,
+            resultSand: 0.9
+          })
+          break
+      }
+
+      this.$emit('update', response.data)
     }
   }
 }

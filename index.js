@@ -6,6 +6,7 @@ const parse = require('koa-body')
 const mount = require('koa-mount')
 
 const Sequelize = require('sequelize')
+const Op = Sequelize.Op
 
 // const zipPending = require('./lib/zipPending')
 // const watsonVR = require('./lib/watson')
@@ -41,18 +42,84 @@ Object.keys(sequelize.models).forEach(model => {
 sequelize.sync()
 
 router.post('/api/observation', parse(), async (ctx, next) => {
-  let { lat, lon } = ctx.request.body
+  let { lat, lon, resultCoral, resultSeagrass, resultSand } = ctx.request.body
+
+  // maybe when saving, also generate larger tiles based on other 'zoom' levels
+  // or could do this client side. client fetches ranges?
+  // could also make another endpoint where we fetch aggregate info based on bounds
 
   ctx.body = await ctx.db.models['observation'].create({
     lat,
     lon,
     depth: 2,
-    temp: 28
+    temp: 28,
+    resultCoral,
+    resultSeagrass,
+    resultSand
   })
 })
 
 router.get('/api/observation', async (ctx, next) => {
   ctx.body = await ctx.db.models['observation'].findAll()
+})
+
+router.get('/api/observation/area', async (ctx, next) => {
+  // retrieve data from an area
+  let { lattop, latbottom, lonleft, lonright } = ctx.query
+
+  ctx.body = await ctx.db.models['observation'].findAll({
+    where: {
+      lat: {
+        [Op.between]: [latbottom, lattop]
+      },
+      lon: {
+        [Op.between]: [lonleft, lonright]
+      }
+    }
+  })
+})
+
+router.get('/api/observation/area/summary', async (ctx, next) => {
+  let { lattop, latbottom, lonleft, lonright } = ctx.query
+  let coralCount = await ctx.db.models['observation'].count({
+    where: {
+      lat: {
+        [Op.between]: [latbottom, lattop]
+      },
+      lon: {
+        [Op.between]: [lonleft, lonright]
+      },
+      resultCoral: { [Op.gt]: 0.8 }
+    }
+  })
+  let seagrassCount = await ctx.db.models['observation'].count({
+    where: {
+      lat: {
+        [Op.between]: [latbottom, lattop]
+      },
+      lon: {
+        [Op.between]: [lonleft, lonright]
+      },
+      resultSeagrass: { [Op.gt]: 0.8 }
+    }
+  })
+  let sandCount = await ctx.db.models['observation'].count({
+    where: {
+      lat: {
+        [Op.between]: [latbottom, lattop]
+      },
+      lon: {
+        [Op.between]: [lonleft, lonright]
+      },
+      resultSand: { [Op.gt]: 0.8 }
+    }
+  })
+
+  ctx.body = {
+    coral: coralCount,
+    seagrass: seagrassCount,
+    sand: sandCount
+  }
 })
 
 app.use(router.routes())
