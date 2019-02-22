@@ -18,9 +18,18 @@ let theLayers = []
 let scaleValue
 
 const scales = {
-  smaller: 0.002,
-  middle: 0.004,
-  larger: 0.008
+  smaller: {
+    map: 0.002,
+    size: 128
+  },
+  middle: {
+    map: 0.004,
+    size: 64
+  },
+  larger: {
+    map: 0.008,
+    size: 32
+  }
 }
 
 export default {
@@ -78,6 +87,9 @@ export default {
     },
     zoomListener () {
       const zoomLevel = theMap.getZoom()
+
+      // 0.004 works up to zoomlevel 13,
+      // need larger value for 12.5, need smaller for 15
       if (zoomLevel >= 15) {
         if (scaleValue !== scales.smaller) {
           scaleValue = scales.smaller
@@ -102,30 +114,14 @@ export default {
       this.populate()
     },
     async populate () {
-      // axios.get('/api/observation')
-      //   .then(response => {
-      //     response.data && response.data.forEach(entry => {
-      //       let data = entry
-      //       L.circle([data.lat, data.lon], {
-      //         className: 'coral',
-      //         radius: 10
-      //       }).addTo(theMap).on('click', (e) => {
-      //         L.DomEvent.stopPropagation(e)
-      //         this.expand({ data, event: e })
-      //       })
-      //     })
-      //   })
-
       // lat increase is up
       // lon increase is right (-69 to -68 is right)
 
-      let lat = 12.458
-      let lon = -69.975
+      let lat = 12.646
+      let lon = -70.092
 
-      // 0.004 works up to zoomlevel 13,
-      // need larger value for 12.5, need smaller for 15
       if (!scaleValue) { scaleValue = scales.larger }
-      const scale = val => val * scaleValue
+      const scale = val => val * scaleValue.map
 
       let refBounds = {
         topLeft: L.latLng([lat + scale(1), lon]),
@@ -140,57 +136,36 @@ export default {
 
       this.$emit('tile-size', this.tileSize)
 
-      let areaContentPromises = []
-      for (let y = 0; y < 6; y++) {
-        for (let x = 0; x < 6; x++) {
-          if (!(
-            (y === 0 && x > 2) ||
-            (y === 1 && x > 3) ||
-            (y === 2 && x > 4)
-          )) {
-            let bounds = [
-              [
-                lat - scale(y),
-                lon + scale(x)
-              ],
-              [
-                lat - scale(y - 1),
-                lon + scale(x - 1)
-              ]
-            ]
-
-            areaContentPromises.push(axios.get('/api/observation/area/summary', {
-              params: {
-                lattop: bounds[1][0],
-                latbottom: bounds[0][0],
-                lonleft: bounds[1][1],
-                lonright: bounds[0][1]
-              }
-            }))
-          }
+      let gridResponse = await axios.get('/api/observation/grid', {
+        params: {
+          size: scaleValue.size,
+          lattop: lat,
+          lonleft: lon,
+          stepSize: scaleValue.map
         }
-      }
+      })
 
-      let areaContents = await Promise.all(areaContentPromises)
+      gridResponse.data.forEach(section => {
+        let { observations, bounds } = section
+        let className = 'other'
 
-      areaContents.forEach(areaContent => {
-        let { coral, seagrass, sand, bounds: srcBounds } = areaContent.data
+        if (observations) {
+          let sum = observations.reduce((previous, observation) => {
+            previous.coral = previous.coral + observation.resultCoral
+            previous.seagrass = previous.seagrass + observation.resultSeagrass
+            previous.sand = previous.sand + observation.resultSand
 
-        if (!(coral || seagrass || sand)) {
-          // return
-        }
+            return previous
+          }, { coral: 0, seagrass: 0, sand: 0 })
 
-        let className = Object.keys(areaContent.data)
-          .map((v, i) => ({ name: v, count: areaContent.data[v] }))
-          .sort((a, b) => b.count - a.count)[0].name
-
-        if (!(coral || seagrass || sand)) {
-          className = 'other'
+          className = Object.keys(sum)
+            .map(name => ({ name, sum: sum[name] }))
+            .sort((a, b) => b.sum - a.sum)[0].name
         }
 
         let latlngBounds = [
-          [srcBounds.lattop, srcBounds.lonleft],
-          [srcBounds.latbottom, srcBounds.lonright]
+          [bounds.top, bounds.left],
+          [bounds.bottom, bounds.right]
         ]
 
         let rect = L.rectangle(latlngBounds, {

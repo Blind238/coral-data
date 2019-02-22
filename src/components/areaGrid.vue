@@ -32,23 +32,22 @@ export default {
       this.$emit('show', item)
     },
     classified (item) {
-      if (
-        !(item.resultCoral ||
-          item.resultSeagrass ||
-          item.resultSand)
-      ) {
-        return 'other'
+      let className = 'other'
+
+      if (item.observations) {
+        let sum = item.observations.reduce((previous, observation) => {
+          previous.coral = previous.coral + observation.resultCoral
+          previous.seagrass = previous.seagrass + observation.resultSeagrass
+          previous.sand = previous.sand + observation.resultSand
+
+          return previous
+        }, { coral: 0, seagrass: 0, sand: 0 })
+
+        className = Object.keys(sum).map(name => ({ name, sum: sum[name] }))
+          .sort((a, b) => b.sum - a.sum)[0].name
       }
 
-      let results = [
-        { name: 'coral', result: item.resultCoral },
-        { name: 'seagrass', result: item.resultSeagrass },
-        { name: 'sand', result: item.resultSand }
-      ]
-      // sort descending
-      results.sort((a, b) => b.result - a.result)
-
-      return results[0].name
+      return className
     }
   }
 }

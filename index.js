@@ -70,6 +70,10 @@ router.get('/api/observation/area/summary', async (ctx, next) => {
   ctx.body = await ctx.db.models['observation'].areaSummary(ctx.query)
 })
 
+router.get('/api/observation/grid', async (ctx, next) => {
+  ctx.body = await ctx.db.models['observation'].grid(ctx.query)
+})
+
 app.use(router.routes())
   .use(router.allowedMethods())
 

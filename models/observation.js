@@ -74,5 +74,55 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
 
+  observation.grid = async (ctxQuery) => {
+    let { size, lattop, latbottom, lonleft, lonright, stepSize } = ctxQuery
+
+    let grid = []
+
+    // ensure they are all numbers
+    if (size) size *= 1
+    if (stepSize) stepSize *= 1
+    if (lattop) lattop *= 1
+    if (latbottom) latbottom *= 1
+    if (lonleft) lonleft *= 1
+    if (lonright) lonright *= 1
+
+    let verticalStep = stepSize || Math.abs((lattop - latbottom) / size)
+    let horizontalStep = stepSize || Math.abs((lonleft - lonright) / size)
+
+    // x and y for grid, so y should be top to bottom and x left to right
+    for (let y = 0; y < size; y++) {
+      for (let x = 0; x < size; x++) {
+        let section = {
+          bounds: {
+            top: lattop - (verticalStep * y),
+            bottom: lattop - (verticalStep * (y + 1)),
+            left: lonleft + (horizontalStep * x),
+            right: lonleft + (horizontalStep * (x + 1))
+          },
+          center: {
+            lat: lattop - (verticalStep * (y + 0.5)),
+            lon: lonleft + (horizontalStep * (x + 0.5))
+          }
+        }
+
+        let observations = await observation.area({
+          lattop: section.bounds.top,
+          latbottom: section.bounds.bottom,
+          lonleft: section.bounds.left,
+          lonright: section.bounds.right
+        })
+
+        if (observations.length > 0) {
+          section.observations = observations
+        }
+
+        grid.push(section)
+      }
+    }
+
+    return grid
+  }
+
   return observation
 }

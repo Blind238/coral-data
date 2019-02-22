@@ -57,60 +57,17 @@ export default {
       this.$set(this.grid, this.focusedIndex, item)
     },
     async area ({ lat, lon, bounds, id }) {
-      // this.areaGrid = [
-      //   /* eslint-disable no-multi-spaces */
-      //   [1,   2,  3,  4],
-      //   [5,   6,  7,  8],
-      //   [9,  10, 11, 12],
-      //   [13, 14, 15, 16]
-      //   /* eslint-enable no-multi-spaces */
-      // ]
-      // this.grid = Array.from({ length: (6 * 6) }, (v, n) => ({ id: n + 1, bounds }))
-      this.grid = await gridWithinBounds(6, bounds)
-
-      async function gridWithinBounds (gridSize, bounds) {
-        let grid = []
-        let verticalStep = Math.abs((bounds.top - bounds.bottom) / gridSize)
-        let horizontalStep = Math.abs((bounds.left - bounds.right) / gridSize)
-
-        // x and y for grid, so y should be top to bottom and x left to right
-        for (let y = 0; y < gridSize; y++) {
-          for (let x = 0; x < gridSize; x++) {
-            let section = {
-              bounds: {
-                top: bounds.top - (verticalStep * y),
-                bottom: bounds.top - (verticalStep * (y + 1)),
-                left: bounds.left + (horizontalStep * x),
-                right: bounds.left + (horizontalStep * (x + 1))
-              },
-              center: {
-                lat: bounds.top - (verticalStep * (y + 0.5)),
-                lon: bounds.left + (horizontalStep * (x + 0.5))
-              }
-            }
-
-            let details = await axios.get('/api/observation/area', {
+      let gridResponse = await axios.get('/api/observation/grid', {
               params: {
-                lattop: section.bounds.top,
-                latbottom: section.bounds.bottom,
-                lonleft: section.bounds.left,
-                lonright: section.bounds.right
+          size: 6,
+          lattop: bounds.top,
+          latbottom: bounds.bottom,
+          lonleft: bounds.left,
+          lonright: bounds.right
               }
             })
 
-            if (details.data.length > 0) {
-              let { resultCoral, resultSeagrass, resultSand } = details.data[0]
-
-              section.resultCoral = resultCoral
-              section.resultSeagrass = resultSeagrass
-              section.resultSand = resultSand
-            }
-
-            grid.push(section)
-          }
-        }
-        return grid
-      }
+      this.grid = gridResponse.data
     },
     show (observation) {
       this.$refs.theMap.show(observation)
