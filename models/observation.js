@@ -69,7 +69,8 @@ module.exports = (sequelize, DataTypes) => {
     return {
       coral: coralCount,
       seagrass: seagrassCount,
-      sand: sandCount
+      sand: sandCount,
+      bounds: { lattop, latbottom, lonleft, lonright }
     }
   }
 
