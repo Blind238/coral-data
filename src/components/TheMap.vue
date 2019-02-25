@@ -18,6 +18,10 @@ let theLayers = []
 let scaleValue
 
 const scales = {
+  smallest: {
+    map: 0.001,
+    size: 256
+  },
   smaller: {
     map: 0.002,
     size: 128
@@ -87,24 +91,33 @@ export default {
     },
     zoomListener () {
       const zoomLevel = theMap.getZoom()
-
+      let hasChanged = false
       // 0.004 works up to zoomlevel 13,
       // need larger value for 12.5, need smaller for 15
-      if (zoomLevel >= 15) {
+      if (zoomLevel >= 16.5) {
+        if (scaleValue !== scales.smallest) {
+          scaleValue = scales.smallest
+          hasChanged = true
+        }
+      } else if (zoomLevel >= 15) {
         if (scaleValue !== scales.smaller) {
           scaleValue = scales.smaller
-          this.repopulate()
+          hasChanged = true
         }
-      } else if (zoomLevel <= 12.5) {
+      } else if (zoomLevel <= 13) {
         if (scaleValue !== scales.larger) {
           scaleValue = scales.larger
-          this.repopulate()
+          hasChanged = true
         }
       } else {
         if (scaleValue !== scales.middle) {
           scaleValue = scales.middle
-          this.repopulate()
+          hasChanged = true
         }
+      }
+
+      if (hasChanged) {
+        this.repopulate()
       }
     },
     repopulate () {
