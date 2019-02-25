@@ -21,10 +21,12 @@ module.exports = (sequelize, DataTypes) => {
     return observation.findAll({
       where: {
         lat: {
-          [Op.between]: [latbottom, lattop]
+          [Op.gt]: latbottom,
+          [Op.lte]: lattop
         },
         lon: {
-          [Op.between]: [lonleft, lonright]
+          [Op.gt]: lonleft,
+          [Op.lte]: lonright
         }
       }
     })
@@ -35,10 +37,12 @@ module.exports = (sequelize, DataTypes) => {
     let coralCount = await observation.count({
       where: {
         lat: {
-          [Op.between]: [latbottom, lattop]
+          [Op.gt]: latbottom,
+          [Op.lte]: lattop
         },
         lon: {
-          [Op.between]: [lonleft, lonright]
+          [Op.gt]: lonleft,
+          [Op.lte]: lonright
         },
         resultCoral: { [Op.gt]: 0.8 }
       }
@@ -46,10 +50,12 @@ module.exports = (sequelize, DataTypes) => {
     let seagrassCount = await observation.count({
       where: {
         lat: {
-          [Op.between]: [latbottom, lattop]
+          [Op.gt]: latbottom,
+          [Op.lte]: lattop
         },
         lon: {
-          [Op.between]: [lonleft, lonright]
+          [Op.gt]: lonleft,
+          [Op.lte]: lonright
         },
         resultSeagrass: { [Op.gt]: 0.8 }
       }
@@ -57,10 +63,12 @@ module.exports = (sequelize, DataTypes) => {
     let sandCount = await observation.count({
       where: {
         lat: {
-          [Op.between]: [latbottom, lattop]
+          [Op.gt]: latbottom,
+          [Op.lte]: lattop
         },
         lon: {
-          [Op.between]: [lonleft, lonright]
+          [Op.gt]: lonleft,
+          [Op.lte]: lonright
         },
         resultSand: { [Op.gt]: 0.8 }
       }
