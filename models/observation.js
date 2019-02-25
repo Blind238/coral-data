@@ -106,22 +106,26 @@ module.exports = (sequelize, DataTypes) => {
           }
         }
 
-        let observations = await observation.area({
-          lattop: section.bounds.top,
-          latbottom: section.bounds.bottom,
-          lonleft: section.bounds.left,
-          lonright: section.bounds.right
-        })
-
-        if (observations.length > 0) {
-          section.observations = observations
-        }
-
         grid.push(section)
       }
     }
 
-    return grid
+    let gridObservations = await Promise.all(grid.map(section => {
+      return observation.area({
+        lattop: section.bounds.top,
+        latbottom: section.bounds.bottom,
+        lonleft: section.bounds.left,
+        lonright: section.bounds.right
+      })
+    }))
+
+    let gridWithObservations = gridObservations.map((observations, index) => {
+      return observations.length > 0
+        ? { ...grid[index], observations }
+        : grid[index]
+    })
+
+    return gridWithObservations
   }
 
   return observation
