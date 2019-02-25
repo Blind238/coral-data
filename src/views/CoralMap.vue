@@ -58,14 +58,14 @@ export default {
     },
     async area ({ lat, lon, bounds, id }) {
       let gridResponse = await axios.get('/api/observation/grid', {
-              params: {
+        params: {
           size: 6,
-          lattop: bounds.top,
-          latbottom: bounds.bottom,
-          lonleft: bounds.left,
-          lonright: bounds.right
-              }
-            })
+          top: bounds.top,
+          bottom: bounds.bottom,
+          left: bounds.left,
+          right: bounds.right
+        }
+      })
 
       this.grid = gridResponse.data
     },

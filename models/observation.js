@@ -16,33 +16,33 @@ module.exports = (sequelize, DataTypes) => {
   })
 
   observation.area = (ctxQuery) => {
-    let { lattop, latbottom, lonleft, lonright } = ctxQuery
+    let { top, bottom, left, right } = ctxQuery
 
     return observation.findAll({
       where: {
         lat: {
-          [Op.gt]: latbottom,
-          [Op.lte]: lattop
+          [Op.gt]: bottom,
+          [Op.lte]: top
         },
         lon: {
-          [Op.gt]: lonleft,
-          [Op.lte]: lonright
+          [Op.gt]: left,
+          [Op.lte]: right
         }
       }
     })
   }
 
   observation.areaSummary = async (ctxQuery) => {
-    let { lattop, latbottom, lonleft, lonright } = ctxQuery
+    let { top, bottom, left, right } = ctxQuery
     let coralCount = await observation.count({
       where: {
         lat: {
-          [Op.gt]: latbottom,
-          [Op.lte]: lattop
+          [Op.gt]: bottom,
+          [Op.lte]: top
         },
         lon: {
-          [Op.gt]: lonleft,
-          [Op.lte]: lonright
+          [Op.gt]: left,
+          [Op.lte]: right
         },
         resultCoral: { [Op.gt]: 0.8 }
       }
@@ -50,12 +50,12 @@ module.exports = (sequelize, DataTypes) => {
     let seagrassCount = await observation.count({
       where: {
         lat: {
-          [Op.gt]: latbottom,
-          [Op.lte]: lattop
+          [Op.gt]: bottom,
+          [Op.lte]: top
         },
         lon: {
-          [Op.gt]: lonleft,
-          [Op.lte]: lonright
+          [Op.gt]: left,
+          [Op.lte]: right
         },
         resultSeagrass: { [Op.gt]: 0.8 }
       }
@@ -63,12 +63,12 @@ module.exports = (sequelize, DataTypes) => {
     let sandCount = await observation.count({
       where: {
         lat: {
-          [Op.gt]: latbottom,
-          [Op.lte]: lattop
+          [Op.gt]: bottom,
+          [Op.lte]: top
         },
         lon: {
-          [Op.gt]: lonleft,
-          [Op.lte]: lonright
+          [Op.gt]: left,
+          [Op.lte]: right
         },
         resultSand: { [Op.gt]: 0.8 }
       }
@@ -78,22 +78,22 @@ module.exports = (sequelize, DataTypes) => {
       coral: coralCount,
       seagrass: seagrassCount,
       sand: sandCount,
-      bounds: { lattop, latbottom, lonleft, lonright }
+      bounds: { top, bottom, left, right }
     }
   }
 
   observation.grid = async (ctxQuery) => {
-    let { size, lattop, latbottom, lonleft, lonright, stepSize, viewtop, viewbottom, viewleft, viewright, noempty } = ctxQuery
+    let { size, top, bottom, left, right, stepSize, viewtop, viewbottom, viewleft, viewright, noempty } = ctxQuery
 
     let grid = []
 
     // ensure they are all numbers
     if (size) size *= 1
     if (stepSize) stepSize *= 1
-    if (lattop) lattop *= 1
-    if (latbottom) latbottom *= 1
-    if (lonleft) lonleft *= 1
-    if (lonright) lonright *= 1
+    if (top) top *= 1
+    if (bottom) bottom *= 1
+    if (left) left *= 1
+    if (right) right *= 1
     if (viewtop) viewtop *= 1
     if (viewbottom) viewbottom *= 1
     if (viewleft) viewleft *= 1
@@ -115,22 +115,22 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
 
-    let verticalStep = stepSize || Math.abs((lattop - latbottom) / size)
-    let horizontalStep = stepSize || Math.abs((lonleft - lonright) / size)
+    let verticalStep = stepSize || Math.abs((top - bottom) / size)
+    let horizontalStep = stepSize || Math.abs((left - right) / size)
 
     // x and y for grid, so y should be top to bottom and x left to right
     for (let y = 0; y < size; y++) {
       for (let x = 0; x < size; x++) {
         let section = {
           bounds: {
-            top: lattop - (verticalStep * y),
-            bottom: lattop - (verticalStep * (y + 1)),
-            left: lonleft + (horizontalStep * x),
-            right: lonleft + (horizontalStep * (x + 1))
+            top: top - (verticalStep * y),
+            bottom: top - (verticalStep * (y + 1)),
+            left: left + (horizontalStep * x),
+            right: left + (horizontalStep * (x + 1))
           },
           center: {
-            lat: lattop - (verticalStep * (y + 0.5)),
-            lon: lonleft + (horizontalStep * (x + 0.5))
+            lat: top - (verticalStep * (y + 0.5)),
+            lon: left + (horizontalStep * (x + 0.5))
           }
         }
 
@@ -146,10 +146,10 @@ module.exports = (sequelize, DataTypes) => {
 
     let gridObservations = await Promise.all(grid.map(section => {
       return observation.area({
-        lattop: section.bounds.top,
-        latbottom: section.bounds.bottom,
-        lonleft: section.bounds.left,
-        lonright: section.bounds.right
+        top: section.bounds.top,
+        bottom: section.bounds.bottom,
+        left: section.bounds.left,
+        right: section.bounds.right
       })
     }))
 

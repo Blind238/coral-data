@@ -141,8 +141,8 @@ export default {
       let gridResponse = await axios.get('/api/observation/grid', {
         params: {
           size: scaleValue.size,
-          lattop: lat,
-          lonleft: lon,
+          top: lat,
+          left: lon,
           stepSize: scaleValue.map,
           viewtop: viewport.getNorth(),
           viewbottom: viewport.getSouth(),
