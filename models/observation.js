@@ -75,7 +75,7 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   observation.grid = async (ctxQuery) => {
-    let { size, lattop, latbottom, lonleft, lonright, stepSize } = ctxQuery
+    let { size, lattop, latbottom, lonleft, lonright, stepSize, viewtop, viewbottom, viewleft, viewright, noempty } = ctxQuery
 
     let grid = []
 
@@ -86,6 +86,26 @@ module.exports = (sequelize, DataTypes) => {
     if (latbottom) latbottom *= 1
     if (lonleft) lonleft *= 1
     if (lonright) lonright *= 1
+    if (viewtop) viewtop *= 1
+    if (viewbottom) viewbottom *= 1
+    if (viewleft) viewleft *= 1
+    if (viewright) viewright *= 1
+
+    function viewportContains (bounds) {
+      if (bounds.top <= viewtop &&
+        bounds.bottom >= viewbottom &&
+        bounds.left >= viewleft &&
+        bounds.right <= viewright) {
+        return true
+      } else if (bounds.top >= viewbottom &&
+        bounds.bottom <= viewtop &&
+        bounds.left <= viewright &&
+        bounds.right >= viewleft) {
+        return true
+      } else {
+        return false
+      }
+    }
 
     let verticalStep = stepSize || Math.abs((lattop - latbottom) / size)
     let horizontalStep = stepSize || Math.abs((lonleft - lonright) / size)
@@ -103,6 +123,12 @@ module.exports = (sequelize, DataTypes) => {
           center: {
             lat: lattop - (verticalStep * (y + 0.5)),
             lon: lonleft + (horizontalStep * (x + 0.5))
+          }
+        }
+
+        if (viewtop && viewbottom && viewleft && viewright) {
+          if (!viewportContains(section.bounds)) {
+            continue
           }
         }
 
@@ -124,6 +150,10 @@ module.exports = (sequelize, DataTypes) => {
         ? { ...grid[index], observations }
         : grid[index]
     })
+
+    if (noempty) {
+      gridWithObservations = gridWithObservations.filter(section => (section.observations))
+    }
 
     return gridWithObservations
   }

@@ -136,12 +136,18 @@ export default {
 
       this.$emit('tile-size', this.tileSize)
 
+      let viewport = theMap.getBounds()
+
       let gridResponse = await axios.get('/api/observation/grid', {
         params: {
           size: scaleValue.size,
           lattop: lat,
           lonleft: lon,
-          stepSize: scaleValue.map
+          stepSize: scaleValue.map,
+          viewtop: viewport.getNorth(),
+          viewbottom: viewport.getSouth(),
+          viewleft: viewport.getWest(),
+          viewright: viewport.getEast()
         }
       })
 
