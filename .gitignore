@@ -2,7 +2,7 @@
 node_modules
 /images
 /dist
-db.sqlite
+# db.sqlite
 
 # local env files
 .env.local

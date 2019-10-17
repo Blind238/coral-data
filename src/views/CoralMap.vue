@@ -2,15 +2,15 @@
   <v-container fluid fill-height class="coral-map-container">
     <v-layout row>
       <v-flex grow>
-          <div class="coral-map-legend">
-            Legend:
-            <ul>
-              <li><span class="coral"></span>Coral</li>
-              <li><span class="seagrass"></span>Seagrass</li>
-              <li><span class="sand"></span>Sand</li>
-              <li><span class="other"></span>Other/Debris</li>
-            </ul>
-          </div>
+        <div class="coral-map-legend">
+          Legend:
+          <ul>
+            <li><span class="coral"></span>Coral</li>
+            <li><span class="seagrass"></span>Seagrass</li>
+            <li><span class="sand"></span>Sand</li>
+            <li><span class="other"></span>Other/Debris</li>
+          </ul>
+        </div>
         <div class="map-container">
           <TheMap ref="theMap" class="coral-map" @expand-point="expand" @area="area" />
         </div>
@@ -63,7 +63,8 @@ export default {
           top: bounds.top,
           bottom: bounds.bottom,
           left: bounds.left,
-          right: bounds.right
+          right: bounds.right,
+          withempty: true
         }
       })
 

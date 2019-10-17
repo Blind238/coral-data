@@ -83,7 +83,7 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   observation.grid = async (ctxQuery) => {
-    let { size, top, bottom, left, right, stepSize, viewtop, viewbottom, viewleft, viewright, noempty } = ctxQuery
+    let { size, top, bottom, left, right, stepSize, viewtop, viewbottom, viewleft, viewright, withempty } = ctxQuery
 
     let grid = []
 
@@ -159,7 +159,7 @@ module.exports = (sequelize, DataTypes) => {
         : grid[index]
     })
 
-    if (noempty) {
+    if (!withempty) {
       gridWithObservations = gridWithObservations.filter(section => (section.observations))
     }
 

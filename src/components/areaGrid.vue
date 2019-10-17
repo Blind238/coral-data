@@ -2,7 +2,7 @@
   <v-card>
     <v-container grid-list-sm class="container" >
       <v-layout row wrap>
-        <v-flex xs2 v-for="(item, index) in grid" :key="item.id">
+        <v-flex xs2 v-for="(item, index) in grid" :key="index">
           <v-responsive class="item" :class="classified(item)" aspect-ratio="1" @click="focus(item, index)">
             <div>
             </div>

@@ -2,24 +2,24 @@
   <v-card>
     <v-layout row wrap style="width: 600px">
       <v-flex xs7>
-        <v-list>
+        <v-list v-for="observation in observations" :key="observation.id">
           <v-list-tile>
-            <v-list-tile-content>lattitude: {{ lat }}</v-list-tile-content>
+            <v-list-tile-content>lattitude: {{ observation.lat }}</v-list-tile-content>
           </v-list-tile>
           <v-list-tile>
-            <v-list-tile-content>longitude: {{ lon }}</v-list-tile-content>
+            <v-list-tile-content>longitude: {{ observation.lon }}</v-list-tile-content>
           </v-list-tile>
           <v-list-tile>
-            <v-list-tile-content>depth: {{ depth }} meters</v-list-tile-content>
+            <v-list-tile-content>depth: {{ observation.depth }} meters</v-list-tile-content>
           </v-list-tile>
           <v-list-tile>
-            <v-list-tile-content>temperature: {{ temp }}&deg; Celcius </v-list-tile-content>
+            <v-list-tile-content>temperature: {{ observation.temp }}&deg; Celcius </v-list-tile-content>
           </v-list-tile>
           <v-list-tile>
             <v-list-tile-content>
-              coral: {{ resultCoral }},
-              seagrass: {{ resultSeagrass }},
-              sand: {{ resultSand }}
+              coral: {{ observation.resultCoral }},
+              seagrass: {{ observation.resultSeagrass }},
+              sand: {{ observation.resultSand }}
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
@@ -93,6 +93,10 @@ export default {
     resultSand: {
       type: Number,
       default: 0
+    },
+    observations: {
+      type: Array,
+      default: () => null
     }
   },
   methods: {

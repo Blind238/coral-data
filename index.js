@@ -58,6 +58,12 @@ router.post('/api/observation', parse(), async (ctx, next) => {
   })
 })
 
+router.use(async (ctx,next) => {
+  let timer = Date.now()
+  await next()
+  console.log(Date.now() - timer)
+})
+
 router.get('/api/observation', async (ctx, next) => {
   ctx.body = await ctx.db.models['observation'].findAll()
 })
