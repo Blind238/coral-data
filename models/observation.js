@@ -144,14 +144,23 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
 
-    let gridObservations = await Promise.all(grid.map(section => {
-      return observation.area({
-        top: section.bounds.top,
-        bottom: section.bounds.bottom,
-        left: section.bounds.left,
-        right: section.bounds.right
-      })
-    }))
+    let gridObservations = await sequelize.transaction(t => {
+      return Promise.all(grid.map(section => {
+        let { top, bottom, left, right } = section.bounds
+
+        return observation.findAll({
+          where: {
+            lat: {
+              [Op.between]: [bottom, top]
+            },
+            lon: {
+              [Op.between]: [left, right]
+            }
+          },
+          transaction: t
+        })
+      }))
+    })
 
     let gridWithObservations = gridObservations.map((observations, index) => {
       return observations.length > 0
