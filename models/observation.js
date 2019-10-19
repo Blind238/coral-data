@@ -144,22 +144,51 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
 
-    let gridObservations = await sequelize.transaction(t => {
-      return Promise.all(grid.map(section => {
-        let { top, bottom, left, right } = section.bounds
+    /* database only solution */
+    // let gridObservations = await sequelize.transaction(t => {
+    //   return Promise.all(grid.map(section => {
+    //     let { top, bottom, left, right } = section.bounds
 
-        return observation.findAll({
-          where: {
-            lat: {
-              [Op.between]: [bottom, top]
-            },
-            lon: {
-              [Op.between]: [left, right]
-            }
-          },
-          transaction: t
-        })
-      }))
+    //     return observation.findAll({
+    //       where: {
+    //         lat: {
+    //           [Op.between]: [bottom, top]
+    //         },
+    //         lon: {
+    //           [Op.between]: [left, right]
+    //         }
+    //       },
+    //       transaction: t
+    //     })
+    //   }))
+    // })
+
+    let areaObservations
+    if (viewtop && viewbottom && viewleft && viewright) {
+      areaObservations = await observation.area({
+        top: viewtop,
+        bottom: viewbottom,
+        left: viewleft,
+        right: viewright
+      })
+    } else {
+      areaObservations = await observation.area({
+        top: top,
+        bottom: bottom,
+        left: left,
+        right: right
+      })
+    }
+
+    let gridObservations = grid.map(section => {
+      let { top, bottom, left, right } = section.bounds
+
+      let filtered = areaObservations.filter(obs => {
+        return (obs.lat > bottom && obs.lat <= top &&
+                obs.lon > left && obs.lon <= right)
+      })
+
+      return filtered
     })
 
     let gridWithObservations = gridObservations.map((observations, index) => {
