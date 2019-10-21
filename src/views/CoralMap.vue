@@ -104,6 +104,7 @@ path {
 
 <style lang="scss" scoped>
 @import '../legend-colors';
+$map-sea: #aad3df;
 
 .coral-map-container {
   position: relative;
@@ -132,6 +133,7 @@ path {
     left: 0;
     margin: 1.5rem 2rem;
     text-align: left;
+    background-color: rgba($map-sea, 0.35);
 
     ul { list-style: none; }
     li { margin: 0.5em; }
